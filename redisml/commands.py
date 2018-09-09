@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class LinReg(Enum):
+class LinRegCommand(Enum):
     SET = 'ML.LINREG.SET'
     PREDICT = 'ML.LINREG.PREDICT'
 
@@ -9,7 +9,7 @@ class LinReg(Enum):
         return self.value
 
 
-class LogReg(Enum):
+class LogRegCommand(Enum):
     SET = 'ML.LOGREG.SET'
     PREDICT = 'ML.LOGREG.PREDICT'
 
