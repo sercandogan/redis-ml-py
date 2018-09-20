@@ -15,3 +15,14 @@ class LogRegCommand(Enum):
 
     def __get__(self, *args):
         return self.value
+
+
+class MatrixCommand(Enum):
+    SET = 'ML.MATRIX.SET'
+    GET = 'ML.MATRIX.GET'
+    ADD = 'ML.MATRIX.ADD'
+    MULTIPLY = 'ML.MATRIX.MULTIPLY'
+    SCALE = 'ML.MATRIX.SCALE'
+
+    def __get__(self, *args):
+        return self.value
