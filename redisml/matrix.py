@@ -26,7 +26,7 @@ class Matrix(object):
         if data:
             nrow = data[0]
             ncol = data[1]
-            data = [float(x) for x in data[2:]]
+            data = [eval(x) for x in data[2:]]
             data = np.array(data).reshape(nrow, ncol)
             return data
         return False

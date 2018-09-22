@@ -5,10 +5,10 @@ from redisml.matrix import Matrix
 from redisml import LinearRegression, LogisticRegression
 from redisml.utils import get_coefficients
 
-r = redis.StrictRedis(host='192.168.99.100', port=6379)
+r = redis.StrictRedis(host='192.168.99.100', port=6379, decode_responses=True)
 print(r.ping())
 
-a = numpy.array(((1, 2, 3,), (4, 5, 6), (7, 8, 9)))
+a = numpy.array(((1.23, 212.123, 3,), (4.100000, 5, 6), (7, 8, 9)))
 print(a)
 b = Matrix('data', r)
 b.set(a)
