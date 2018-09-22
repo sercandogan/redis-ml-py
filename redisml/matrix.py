@@ -7,39 +7,21 @@ class Matrix(object):
         Implementation of Redis-ML Matrix Operations
     """
 
-    def __init__(self, data, name, conn, dtype=None):
-
-        if dtype is None:
-            dtype = float
-
-        self.data = np.array(data, dtype=dtype)
-        ndim = self.data.ndim
-        self.shape = self.data.shape
-        if ndim > 2:
-            raise ValueError("matrix must be 2-dimensional")
-        elif ndim == 0:
-            self.shape = (1, 1)
-        elif ndim == 1:
-            self.shape = (1, self.shape[0])
-
-        self.name = name
+    def __init__(self, matrix_name, conn):
+        self.matrix_name = matrix_name
         self.conn = conn
+        self.shape = None
+        self.dtype = None
 
-        self._set()
-
-    def _set(self):
-        """
-            Set the matrix
-        """
-        nrow = self.shape[0]
-        ncol = self.shape[1]
-        self.conn.execute_command(MatrixCommand.SET, self.name, nrow, ncol, *self.data.flatten())
+    def set(self, matrix):
+        arr = np.array(matrix)
+        shape = self.get_shape(arr)
+        nrow = shape[0]
+        ncol = shape[1]
+        self.conn.execute_command(MatrixCommand.SET, self.matrix_name, nrow, ncol, *arr.flatten())
 
     def get(self):
-        return self.get_from_redis()
-
-    def get_from_redis(self):
-        data = self.conn.execute_command(MatrixCommand.GET, self.name)
+        data = self.conn.execute_command(MatrixCommand.GET, self.matrix_name)
 
         if data:
             nrow = data[0]
@@ -49,11 +31,18 @@ class Matrix(object):
             return data
         return False
 
-    def __add__(self, other):
-        self.conn.execute_command(MatrixCommand.ADD, self.name, other.name, 'add')
+    @staticmethod
+    def get_shape(array):
+        if not isinstance(array, np.ndarray):
+            raise Exception('Its not a array')
 
-    def __mul__(self, other):
-        self.conn.execute_command(MatrixCommand.MULTIPLY, self.name, other.name, 'mul')
+        ndim = array.ndim
+        shape = array.shape
+        if ndim > 2:
+            raise ValueError("matrix must be 2-dimensional")
+        elif ndim == 0:
+            shape = (1, 1)
+        elif ndim == 1:
+            shape = (1, shape[0])
 
-    def scale(self, scalar):
-        self.conn.execute_command(MatrixCommand.SCALE, self.name, scalar)
+        return shape
