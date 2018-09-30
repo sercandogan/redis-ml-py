@@ -109,7 +109,7 @@ class Matrix(object):
         :param scalar: Scalar: int or float
         :return: True or False
         """
-        if not isinstance(scalar, int) or isinstance(scalar, float):
+        if type(scalar) != int and type(scalar) != float:
             raise Exception('Scalar should be int or float')
 
         command = self.conn.execute_command(MatrixCommand.SCALE, self.matrix_name, scalar)
